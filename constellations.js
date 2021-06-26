@@ -39,6 +39,7 @@ class Particle {
         this.directionY = directionY;
         this.size = size;
         this.color = color;
+        this.leader = false;
     }
 
     draw() {
@@ -117,9 +118,16 @@ function init() {
     //them into the particles array.
     
     for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 0.1) + 0.8;
+
+        //VARIABLE ME FOR CLASS
+        // let size = (Math.random() * 0.1) + 0.8;
+        let size = 0;
+
+
         let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
         let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+        
+        //VARIABLE ME (multipliers here dictate the velocity around the canvas)
         let directionX = (Math.random() * 0.25);
         let directionY = (Math.random() * 0.7);
         let color = '#ECFDFD';
@@ -128,20 +136,49 @@ function init() {
     }
 }
 
+function chooseLeaders() {
+
+}
+
+//add particle on click
+window.addEventListener('click', 
+    function() {
+        let size = (Math.random() * 0.1) + 0.8;
+        let x = mouse.x;
+        let y = mouse.y;
+        
+        //VARIABLE ME (multipliers here dictate the velocity around the canvas)
+        let directionX = (Math.random() * 0.25);
+        let directionY = (Math.random() * 0.7);
+        let color = '#ECFDFD';
+
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+    }
+);
+
+
 //check if particles are close enough to draw a line between them.
 function connect() {
     
     let opacityValue = 1;
 
     for (let a = 0; a < particlesArray.length; a++) {
-        for (let b = a; b < particlesArray.length; b++) {
+        for (let b = a + 1; b < particlesArray.length; b++) {
             let dx = particlesArray[a].x - particlesArray[b].x;
             let dy = particlesArray[a].y - particlesArray[b].y;
             let distance = (dx*dx + dy*dy);
 
             if (distance < (((canvas.width) * (canvas.height)) / 40)) {
                 opacityValue = 1 - (distance/10000);
-                ctx.strokeStyle = 'rgba(236,253,253,' + opacityValue + ')';
+
+                if ((particlesArray[a].x < (canvas.width/2)) && (particlesArray[a].y < (canvas.height/2))) {
+                    ctx.strokeStyle = 'rgba(86,153,33,' + opacityValue + ')';
+                }
+                else {
+                    ctx.strokeStyle = 'rgba(236,253,253,' + opacityValue + ')';
+                }
+                
+
                 ctx.lineWidth = 1 + (1/(1 + distance));
                 ctx.beginPath();
                 ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -177,7 +214,9 @@ window.addEventListener('resize',
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         mouse.radius = ((canvas.height/80) * (canvas.height/80));
-        init();
+
+        
+        // init();
     }
 );
 
