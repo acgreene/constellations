@@ -81,17 +81,19 @@ class Particle {
             //if it collides with the mouse. We use the canvas.width to make
             //sure that it isn't pushed off screen. 
 
+            let react = 1.2;
+
             if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                this.x += 10;
+                this.x += react;
             }
             if (mouse.x > this.x && this.x > this.size * 10) {
-                this.x -=10;
+                this.x -= react;
             }
             if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                this.y +=10;
+                this.y += react;
             }
             if (mouse.y > this.y && this.y > this.size * 10) {
-                this.y -=10;
+                this.y -= react;
             }
         }
 
@@ -113,6 +115,7 @@ function init() {
 
     //create the individual particles, randomly assign their properties, and push
     //them into the particles array.
+    
     for (let i = 0; i < numberOfParticles; i++) {
         let size = (Math.random() * 0.1) + 0.8;
         let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
@@ -139,7 +142,7 @@ function connect() {
             if (distance < (((canvas.width) * (canvas.height)) / 40)) {
                 opacityValue = 1 - (distance/10000);
                 ctx.strokeStyle = 'rgba(236,253,253,' + opacityValue + ')';
-                ctx.lineWidth = 1;
+                ctx.lineWidth = 1 + (1/(1 + distance));
                 ctx.beginPath();
                 ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
                 ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
